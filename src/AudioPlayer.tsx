@@ -11,12 +11,12 @@ interface Track {
   playlistName: string;
 }
 
-interface Playlist {
-  name: string;
-  artist: string;
-  year: number;
-  tracks: Track[];
-}
+// interface Playlist {
+//   name: string;
+//   artist: string;
+//   year: number;
+//   tracks: Track[];
+// }
 
 // Flatten all tracks from all playlists into a single array
 const allTracks: Track[] = playlistData.playlists.flatMap((playlist) =>
