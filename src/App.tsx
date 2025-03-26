@@ -72,7 +72,7 @@ const App = () => {
               )
             }
           />
-          {/* <Route path="/search" element={isAuthenticated ? <div>Search Page (Coming Soon)</div> : <Navigate to="/" />} />
+          <Route path="/search" element={isAuthenticated ? <div>Search Page (Coming Soon)</div> : <Navigate to="/" />} />
           <Route path="/library" element={isAuthenticated ? <div>Your Library (Coming Soon)</div> : <Navigate to="/" />} />
           <Route path="/profile" element={isAuthenticated ? <div>User Profile (Coming Soon)</div> : <Navigate to="/" />} />
           <Route path="/settings" element={isAuthenticated ? <div>Settings (Coming Soon)</div> : <Navigate to="/" />} />
@@ -82,4 +82,4 @@ const App = () => {
   );
 };
 
-export default App; */}
+export default App;
