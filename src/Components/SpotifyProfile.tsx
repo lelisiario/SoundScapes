@@ -1,40 +1,33 @@
-import { useState, useEffect } from "react";
-import { fetchSpotifyProfile } from "../api";
-import { SpotifyUser } from "../types";
+import { useEffect, useState } from "react";
 
-interface SpotifyProfileProps {
-  token: string;
-}
-
-const SpotifyProfile: React.FC<SpotifyProfileProps> = ({ token }) => {
-  const [user, setUser] = useState<SpotifyUser | null>(null);
-  const [error, setError] = useState<string | null>(null);
+const SpotifyProfile = ({ token, setUsername, hideDetails = false }) => {
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     if (!token) return;
 
-    fetchSpotifyProfile(token)
+    fetch("https://api.spotify.com/v1/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
       .then((data) => {
-        if (data) setUser(data);
-        else setError("Failed to fetch user data.");
+        setProfile(data);
+        setUsername(data.display_name); // Pass username to App.tsx
       })
-      .catch((err) => setError(err.message));
-  }, [token]);
+      .catch((error) => console.error("Error fetching profile:", error));
+  }, [token, setUsername]);
 
-  if (error) return <p>Error: {error}</p>;
-  if (!user) return <p>Loading...</p>;
+  if (!profile) return <p>Loading profile...</p>;
 
   return (
     <div>
-      <h2>Welcome, {user.display_name}!</h2>
-      <p>Email: {user.email}</p>
-      <p>
-        Spotify Profile:{" "}
-        <a href={user.external_urls.spotify} target="_blank" rel="noopener noreferrer">
-          {user.external_urls.spotify}
-        </a>
-      </p>
-      <p>Subscription: {user.product}</p>
+      {!hideDetails && (
+        <>
+          <p>Email: {profile.email}</p>
+          <p>Spotify Profile: <a href={profile.external_urls.spotify}>{profile.display_name}</a></p>
+          <p>Subscription: {profile.product}</p>
+        </>
+      )}
     </div>
   );
 };
