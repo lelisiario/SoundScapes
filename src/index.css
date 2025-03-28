@@ -1,57 +1,59 @@
-:root {
-  --spotify-green: #1DB954;
-  --spotify-black: #121212;
-  --dark-gray: #282828;
-  --light-gray: #B3B3B3;
-}
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #181818;
+/* Full-width navbar */
+.navbar {
+  width: 100%;
+  background-color: #1e1e1e;
+  padding: 10px 20px;
   color: white;
 }
 
-.app-container {
+/* Navbar container for alignment */
+.navbar-container {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-}
-
-.content-container {
-  flex: 1;
-  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%;
-  text-align: center;
 }
 
-.login-page {
+/* Mood selector */
+.mood-selector {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-              url('/api/placeholder/1600/900') no-repeat center center;
-  background-size: cover;
+  gap: 8px;
 }
 
-.login-page h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+.mood-selector label {
+  font-size: 16px;
 }
 
-.login-page p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
+.mood-dropdown {
+  padding: 5px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: white;
+  color: black;
+}
+
+/* Auth section */
+.auth-section {
+  display: flex;
+  align-items: center;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.login-btn {
+  background-color: #ff5722;
   color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: #e64a19;
 }
