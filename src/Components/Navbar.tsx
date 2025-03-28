@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 interface NavbarProps {
   isAuthenticated: boolean;
+  username: string | null;
   onMoodSelect: (mood: string) => void;
 }
 

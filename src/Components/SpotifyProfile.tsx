@@ -1,7 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-const SpotifyProfile = ({ token, setUsername, hideDetails = false }) => {
-  const [profile, setProfile] = useState(null);
+// Define a type for the Spotify user profile
+interface SpotifyUserProfile {
+  display_name: string;
+  email: string;
+  external_urls: { spotify: string };
+  product: string;
+}
+
+// Define props for the component
+interface SpotifyProfileProps {
+  token: string | null;
+  setUsername: (username: string) => void;
+  hideDetails?: boolean;
+}
+
+const SpotifyProfile: React.FC<SpotifyProfileProps> = ({ token, setUsername, hideDetails = false }) => {
+  const [profile, setProfile] = useState<SpotifyUserProfile | null>(null);
 
   useEffect(() => {
     if (!token) return;
@@ -10,9 +25,11 @@ const SpotifyProfile = ({ token, setUsername, hideDetails = false }) => {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
-      .then((data) => {
-        setProfile(data);
-        setUsername(data.display_name); // Pass username to App.tsx
+      .then((data: SpotifyUserProfile) => {
+        if (data && data.display_name) { // Ensure data is valid before setting state
+          setProfile(data);
+          setUsername(data.display_name);
+        }
       })
       .catch((error) => console.error("Error fetching profile:", error));
   }, [token, setUsername]);
@@ -21,10 +38,15 @@ const SpotifyProfile = ({ token, setUsername, hideDetails = false }) => {
 
   return (
     <div>
-      {!hideDetails && (
+      {!hideDetails && profile && ( // Ensure profile exists before accessing properties
         <>
           <p>Email: {profile.email}</p>
-          <p>Spotify Profile: <a href={profile.external_urls.spotify}>{profile.display_name}</a></p>
+          <p>
+            Spotify Profile:{" "}
+            <a href={profile.external_urls.spotify} target="_blank" rel="noopener noreferrer">
+              {profile.display_name}
+            </a>
+          </p>
           <p>Subscription: {profile.product}</p>
         </>
       )}
