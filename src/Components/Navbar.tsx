@@ -5,23 +5,17 @@ interface NavbarProps {
   isAuthenticated: boolean;
   username: string | null;
   onMoodSelect: (mood: string) => void;
+  selectedMood?: string | null; // Fixed the prop name
 }
 
-const Navbar = ({ isAuthenticated, onMoodSelect }: NavbarProps) => {
+const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, username, onMoodSelect, selectedMood }) => {
+  // State hooks
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [username, setUsername] = useState<string | null>(null);
+  const [localUsername, setUsername] = useState<string | null>(username);
 
   // Moods available for selection
-  const moods = [
-    'Happy', 
-    'Energetic', 
-    'Chill', 
-    'Sad', 
-    'Focused', 
-    'Romantic', 
-    'Party'
-  ];
+  const moods = ['Happy', 'Energetic', 'Chill', 'Sad', 'Focused', 'Romantic', 'Party'];
 
   useEffect(() => {
     // Fetch user profile if authenticated
@@ -34,7 +28,7 @@ const Navbar = ({ isAuthenticated, onMoodSelect }: NavbarProps) => {
               'Authorization': `Bearer ${token}`
             }
           });
-          
+
           if (response.ok) {
             const data = await response.json();
             setUsername(data.display_name || data.id);
@@ -120,7 +114,7 @@ const Navbar = ({ isAuthenticated, onMoodSelect }: NavbarProps) => {
                   aria-expanded={userDropdownOpen}
                 >
                   <i className="bi bi-person-circle"></i> 
-                  {username || 'User'}
+                  {localUsername || 'User'}
                 </button>
                 {userDropdownOpen && (
                   <div className="dropdown-menu">
