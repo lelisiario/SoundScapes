@@ -5,14 +5,14 @@ interface NavbarProps {
   isAuthenticated: boolean;
   username: string | null;
   onMoodSelect: (mood: string) => void;
-  selectedMood?: string | null; // Fixed the prop name
+  selectedMood: string; // Made required since it's a core feature
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, username, onMoodSelect, selectedMood }) => {
   // State hooks
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [localUsername, setUsername] = useState<string | null>(username);
+  const [localUsername, setLocalUsername] = useState<string | null>(username);
 
   // Moods available for selection
   const moods = ['Happy', 'Energetic', 'Chill', 'Sad', 'Focused', 'Romantic', 'Party'];
@@ -23,15 +23,17 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, username, onMoodSelect
       const fetchUserProfile = async () => {
         try {
           const token = localStorage.getItem('spotifyToken');
+          if (!token) return;
+          
           const response = await fetch('https://api.spotify.com/v1/me', {
             headers: {
-              'Authorization': `Bearer ${token}`
-            }
+              Authorization: `Bearer ${token}`,
+            },
           });
 
           if (response.ok) {
             const data = await response.json();
-            setUsername(data.display_name || data.id);
+            setLocalUsername(data.display_name || data.id);
           }
         } catch (error) {
           console.error('Error fetching user profile:', error);
@@ -42,97 +44,38 @@ const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, username, onMoodSelect
     }
   }, [isAuthenticated]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('spotifyToken');
-    window.location.href = '/'; // Refresh the page to trigger re-auth
-  };
-
-  const handleLogin = () => {
-    const clientId = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-    const redirectUri = encodeURIComponent('http://localhost:5173/callback');
-    const scopes = encodeURIComponent('user-read-private user-read-email user-library-modify playlist-modify-public playlist-modify-private');
-    const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}&response_type=token`;
-    window.location.href = authUrl;
-  };
-
   return (
     <nav className="navbar">
-      <div className="navbar-container">
-        <div className="navbar-logo">
-          <Link to="/">
-            <i className="bi bi-music-note-beamed"></i> Soundscapes
-          </Link>
+      <div className="navbar-content">
+        <Link to="/" className="logo">SoundScapes</Link>
+
+        <div className="mood-selector">
+          <label htmlFor="mood">Select Mood:</label>
+          <select
+            id="mood"
+            value={selectedMood}
+            onChange={(e) => onMoodSelect(e.target.value)}
+          >
+            {moods.map((mood) => (
+              <option key={mood} value={mood}>{mood}</option>
+            ))}
+          </select>
         </div>
 
-        <div className="navbar-links">
-          {/* Mood Selector Dropdown */}
-          <div className="dropdown">
-            <button 
-              className="dropdown-toggle" 
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              aria-expanded={dropdownOpen}
-            >
-              <i className="bi bi-emoji-smile"></i> Mood
+        {isAuthenticated ? (
+          <div className="user-menu">
+            <button onClick={() => setUserDropdownOpen(!userDropdownOpen)}>
+              {localUsername || "User"}
             </button>
-            {dropdownOpen && (
-              <div className="dropdown-menu">
-                {moods.map(mood => (
-                  <button 
-                    key={mood} 
-                    className="dropdown-item"
-                    onClick={() => {
-                      onMoodSelect(mood);
-                      setDropdownOpen(false);
-                    }}
-                  >
-                    {mood}
-                  </button>
-                ))}
+            {userDropdownOpen && (
+              <div className="dropdown">
+                <button onClick={() => console.log("Logout")}>Logout</button>
               </div>
             )}
           </div>
-
-          {/* Search Link */}
-          <Link to="/search" className="nav-link">
-            <i className="bi bi-search"></i> Search
-          </Link>
-
-          {/* Library Link (only visible when authenticated) */}
-          {isAuthenticated && (
-            <Link to="/library" className="nav-link">
-              <i className="bi bi-collection"></i> Library
-            </Link>
-          )}
-
-          {/* User Profile / Auth */}
-          <div className="user-dropdown">
-            {isAuthenticated ? (
-              <>
-                <button 
-                  className="dropdown-toggle user-button" 
-                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  aria-expanded={userDropdownOpen}
-                >
-                  <i className="bi bi-person-circle"></i> 
-                  {localUsername || 'User'}
-                </button>
-                {userDropdownOpen && (
-                  <div className="dropdown-menu">
-                    <Link to="/profile" className="dropdown-item">Profile</Link>
-                    <Link to="/settings" className="dropdown-item">Settings</Link>
-                    <button className="dropdown-item" onClick={handleLogout}>
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <button className="login-button" onClick={handleLogin}>
-                <i className="bi bi-spotify"></i> Login with Spotify
-              </button>
-            )}
-          </div>
-        </div>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
       </div>
     </nav>
   );

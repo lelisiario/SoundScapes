@@ -5,12 +5,12 @@ import SpotifyProfile from "./Components/SpotifyProfile";
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
-  const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const [selectedMood, setSelectedMood] = useState<string>("Happy"); 
 
   useEffect(() => {
-    const token = localStorage.getItem("spotify_token"); // 🔹 Retrieve stored token
+    const token = localStorage.getItem("spotify_token");
     if (token) {
-      setIsAuthenticated(true); // ✅ Now `setIsAuthenticated` is used
+      setIsAuthenticated(true);
     }
   }, []);
 
@@ -20,6 +20,7 @@ const App: React.FC = () => {
         isAuthenticated={isAuthenticated}
         username={username}
         onMoodSelect={setSelectedMood}
+        selectedMood={selectedMood}
       />
       <p>Selected Mood: {selectedMood}</p>
       {isAuthenticated && <SpotifyProfile token="your_spotify_token_here" setUsername={setUsername} />}
