@@ -15,17 +15,20 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="app-container"> {/* ✅ Ensures full-height styling */}
       <Navbar
         isAuthenticated={isAuthenticated}
         username={username}
         onMoodSelect={setSelectedMood}
         selectedMood={selectedMood}
       />
-      <p>Selected Mood: {selectedMood}</p>
-      {isAuthenticated && <SpotifyProfile token="your_spotify_token_here" setUsername={setUsername} />}
+      <div className="content-container">
+        <p>Selected Mood: {selectedMood}</p>
+        {isAuthenticated && <SpotifyProfile token="your_spotify_token_here" setUsername={setUsername} />}
+      </div>
     </div>
   );
 };
 
 export default App;
+

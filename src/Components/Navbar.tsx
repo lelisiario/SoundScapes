@@ -1,80 +1,50 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   isAuthenticated: boolean;
   username: string | null;
   onMoodSelect: (mood: string) => void;
-  selectedMood: string; // Made required since it's a core feature
+  selectedMood: string;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, username, onMoodSelect, selectedMood }) => {
-  // State hooks
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [localUsername, setLocalUsername] = useState<string | null>(username);
-
-  // Moods available for selection
-  const moods = ['Happy', 'Energetic', 'Chill', 'Sad', 'Focused', 'Romantic', 'Party'];
-
-  useEffect(() => {
-    // Fetch user profile if authenticated
-    if (isAuthenticated) {
-      const fetchUserProfile = async () => {
-        try {
-          const token = localStorage.getItem('spotifyToken');
-          if (!token) return;
-          
-          const response = await fetch('https://api.spotify.com/v1/me', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            setLocalUsername(data.display_name || data.id);
-          }
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
-        }
-      };
-
-      fetchUserProfile();
-    }
-  }, [isAuthenticated]);
-
   return (
-    <nav className="navbar">
-      <div className="navbar-content">
-        <Link to="/" className="logo">SoundScapes</Link>
-
-        <div className="mood-selector">
-          <label htmlFor="mood">Select Mood:</label>
-          <select
-            id="mood"
-            value={selectedMood}
-            onChange={(e) => onMoodSelect(e.target.value)}
-          >
-            {moods.map((mood) => (
-              <option key={mood} value={mood}>{mood}</option>
-            ))}
-          </select>
-        </div>
-
+    <nav style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "1rem",
+      backgroundColor: "#282828",
+      color: "white"
+    }}>
+      <h2 style={{ margin: 0 }}>SoundScapes</h2>
+      <div>
+        <label htmlFor="mood-select">Select Mood: </label>
+        <select
+          id="mood-select"
+          value={selectedMood}
+          onChange={(e) => onMoodSelect(e.target.value)}
+          style={{
+            padding: "5px",
+            borderRadius: "5px",
+            backgroundColor: "#1DB954",
+            color: "white",
+            border: "none",
+            fontSize: "1rem"
+          }}
+        >
+          <option value="Happy">Happy</option>
+          <option value="Relaxed">Relaxed</option>
+          <option value="Focused">Focused</option>
+          <option value="Energetic">Energetic</option>
+        </select>
+      </div>
+      <div>
         {isAuthenticated ? (
-          <div className="user-menu">
-            <button onClick={() => setUserDropdownOpen(!userDropdownOpen)}>
-              {localUsername || "User"}
-            </button>
-            {userDropdownOpen && (
-              <div className="dropdown">
-                <button onClick={() => console.log("Logout")}>Logout</button>
-              </div>
-            )}
-          </div>
+          <p>Welcome, {username || "User"}!</p>
         ) : (
-          <Link to="/login">Login</Link>
+          <Link to="/login" style={{ color: "white", textDecoration: "none" }}>Login</Link>
         )}
       </div>
     </nav>
