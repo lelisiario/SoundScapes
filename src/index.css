@@ -1,12 +1,43 @@
-/* Full-width navbar */
-.navbar {
-  width: 100%;
-  background-color: #1e1e1e;
-  padding: 10px 20px;
-  color: white;
+/* Root Variables for Theming */
+:root {
+  --primary-color: #1DB954; /* Spotify Green */
+  --secondary-color: #191414; /* Dark Mode Background */
+  --text-color: #ffffff;
+  --hover-color: #1ed760;
+  --card-bg: rgba(255, 255, 255, 0.1);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --radius: 12px;
 }
 
-/* Navbar container for alignment */
+/* Reset Defaults */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Body Styling */
+body {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Navbar (Glassmorphic Style) */
+.navbar {
+  width: 100%;
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(8px);
+  padding: 12px 20px;
+  box-shadow: var(--shadow);
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Navbar Container */
 .navbar-container {
   display: flex;
   justify-content: space-between;
@@ -15,45 +46,73 @@
   margin: 0 auto;
 }
 
-/* Mood selector */
-.mood-selector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* Mood Selector */
+.mood-dropdown {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--card-bg); /* Semi-transparent dark */
+  color: var(--text-color); /* White text */
+  transition: 0.3s;
 }
 
-.mood-selector label {
-  font-size: 16px;
+.mood-dropdown option {
+  background: var(--secondary-color); /* Dark background for dropdown options */
+  color: white;
 }
+
+.mood-dropdown:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 
 .mood-dropdown {
-  padding: 5px;
+  padding: 8px 12px;
   font-size: 16px;
   border: none;
-  border-radius: 4px;
-  background-color: white;
-  color: black;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: var(--text-color);
+  transition: 0.3s;
 }
 
-/* Auth section */
-.auth-section {
-  display: flex;
-  align-items: center;
+.mood-dropdown:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
-.username {
-  font-weight: bold;
-}
-
+/* Login Button */
 .login-btn {
-  background-color: #ff5722;
+  background: var(--primary-color);
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border-radius: var(--radius);
   cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .login-btn:hover {
-  background-color: #e64a19;
+  background: var(--hover-color);
+  transform: translateY(-2px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mood-selector {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .login-btn {
+    width: 100%;
+    text-align: center;
+  }
 }
