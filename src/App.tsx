@@ -8,7 +8,8 @@ const App: React.FC = () => {
   const [selectedMood, setSelectedMood] = useState<string>("Happy"); 
 
   useEffect(() => {
-    const token = localStorage.getItem("spotify_token");
+    const token = localStorage.getItem("spotifyToken");
+    console.log("Retrieved token:", token);
     if (token) {
       setIsAuthenticated(true);
     }
