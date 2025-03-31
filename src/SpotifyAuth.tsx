@@ -14,17 +14,17 @@ const SpotifyAuth = () => {
     let errorParam: string | null = null;
 
     // Check both hash and query parameters
-    // if (window.location.hash) {
-    //   console.log("Processing hash fragment...");
-    //   console.log("Callback URL:", window.location.href);
-    //   const params = new URLSearchParams(window.location.hash.substring(1));
-    //   token = params.get("access_token");
-    //   errorParam = params.get("error");
-    // } else if (window.location.search) {
-    //   console.log("Processing query parameters...");
-    //   const params = new URLSearchParams(window.location.search);
-    //   token = params.get("access_token");
-    //   errorParam = params.get("error");
+    if (window.location.hash) {
+      console.log("Processing hash fragment...");
+      console.log("Callback URL:", window.location.href);
+      const params = new URLSearchParams(window.location.hash.substring(1));
+      token = params.get("access_token");
+      errorParam = params.get("error");
+    } else if (window.location.search) {
+      console.log("Processing query parameters...");
+      const params = new URLSearchParams(window.location.search);
+      token = params.get("access_token");
+      errorParam = params.get("error");
     }
 
     if (errorParam) {
